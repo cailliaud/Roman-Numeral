@@ -10,11 +10,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
     <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
-    <junit-jupiter-engine.version>5.8.2</junit-jupiter-engine.version>
-    <hamcrest-all.version>1.3</hamcrest-all.version>
+    <junit-jupiter-engine.version>5.9.1</junit-jupiter-engine.version>
+    <assertj.version>3.23.1</assertj.version>
   </properties>
 
   <build>
@@ -25,15 +25,40 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <includes>
-            <include>**/*Should.java</include>
-          </includes>
+          <!-- Force alphabetical order to have a reproducible build -->
+          <runOrder>alphabetical</runOrder>
+          <excludes>
+            <exclude>**/*IT*</exclude>
+            <exclude>**/*IntTest*</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${maven-failsafe-plugin.version}</version>
+        <configuration>
+          <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+          <runOrder>alphabetical</runOrder>
+          <includes>
+            <include>**/*IT*</include>
+            <include>**/*IntTest*</include>
+          </includes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -46,9 +71,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-all</artifactId>
-      <version>${hamcrest-all.version}</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
